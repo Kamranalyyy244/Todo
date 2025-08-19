@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const ToDo = () => {
 
     const [popup,setPopup] = useState(false);
-    const [Todo, setTodo] = useState([]);
+    const [Todo, setTodo] = useState( localStorage.getItem("todoos") ? JSON.parse(localStorage.getItem("todoos")) :[]);
     const [Title, setTitle] = useState();
     const [Desc, setDesc] = useState();
     const [Due, setDue] = useState();
@@ -15,6 +15,12 @@ const ToDo = () => {
         setPopup(false)
     }
 
+    useEffect(()=>{
+      localStorage.setItem("todoos",JSON.stringify(Todo))
+    },[Todo])
+    
+
+
   return (
     <div className='p-4 max-w-5xl mx-auto mt-11' >
         <div className='flex justify-between'>
@@ -24,7 +30,7 @@ const ToDo = () => {
 
         {/* title */}
 
-        <div className='border rounded flex text-center text-xl font-bold  mt-10' >
+        <div className='hidden md:flex border rounded overflow-hidden text-center text-xl font-bold  mt-10' >
             <h1 className='border-r-1 pt-1  w-70 h-10' >Title</h1>
             <h1 className='border-r-1 pt-1 w-110 h-10 ' >Description</h1>
             <h1 className='w-60 h-10 pt-1 ' >DueDate</h1>
@@ -32,9 +38,9 @@ const ToDo = () => {
 
         {Todo.length > 0 ? (Todo.map((todo,index)=>(
           <div key={index} className='flex flex-col md:flex-row border-gray-300 border md:border-t-0 rounded-md md:rounded-none mt-4 md:mt-0 ' >
-            <div className='md:w-70 md:border-r border-gray-300 p-2 text-center ' >{todo.Title}</div>
-            <div className='md:w-110 md:border-r border-gray-300 p-2 text-center ' >{todo.Desc}</div>
-            <div className='md:w-60 p-2 text-center ' >{todo.Due}</div>
+            <div className='md:w-70 md:border-r border-gray-300 p-2 text-center ' ><span className='md:hidden font-bold pr-4 '>Title:</span>{todo.Title}</div>
+            <div className='md:w-110 md:border-r border-gray-300 p-2 text-center'> <span className='md:hidden font-bold pr-4' >Description:</span> {todo.Desc}</div>
+            <div className='md:w-60 p-2 text-center ' ><span className=' md:hidden font-bold pr-4' >Due Date:</span>{todo.Due}</div>
 
           </div>
           ))) : (<p className='mt-4 text-gray-500' >No Todos yet.Add one!</p>) }
